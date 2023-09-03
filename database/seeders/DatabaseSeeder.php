@@ -3,7 +3,13 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
+use App\Models\Article;
+use App\Models\Category;
+use App\Models\Comment;
+use App\Models\Profile;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Storage;
 
 class DatabaseSeeder extends Seeder
 {
@@ -12,11 +18,22 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // \App\Models\User::factory(10)->create();
+        //Eliminar carpeta articles y categories y recrearlas
+        Storage::deleteDirectory('articles');
+        Storage::deleteDirectory('categories');
+        Storage::deleteDirectory('profiles');
 
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        Storage::makeDirectory('articles');
+        Storage::makeDirectory('categories');
+        Storage::makeDirectory('profiles');
+
+        //llamada a los seeders, que luego usan los favtories en su Seeder
+        $this->call(UserSeeder::class);
+
+        //llamada a los factories, aquí es más directo
+        Category::factory(8)->create();
+        Article::factory(20)->create();
+        Comment::factory(20)->create();
+        Profile::factory(12)->create();
     }
 }
